@@ -5,6 +5,7 @@
  */
 package wekimini;
 
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -12,6 +13,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
+import static java.net.URI.create;
 import java.util.concurrent.Callable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,6 +28,7 @@ import wekimini.gui.path.PathEditorFrame;
 import wekimini.osc.OSCOutput;
 import wekimini.util.Util;
 import wekimini.WekiMiniRunner;
+import wekimini.gui.ShareFrame;
 
 /**
  *
@@ -262,6 +265,9 @@ public class MainGUI extends javax.swing.JFrame implements Closeable {
         jMenuItem2 = new javax.swing.JMenuItem();
         jMenuItem7 = new javax.swing.JMenuItem();
         menuPerformanceCheck = new javax.swing.JCheckBoxMenuItem();
+        menuPublic = new javax.swing.JMenu();
+        itemShare = new javax.swing.JMenuItem();
+        itemStore = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("New project");
@@ -374,6 +380,26 @@ public class MainGUI extends javax.swing.JFrame implements Closeable {
 
         jMenuBar1.add(jMenu2);
 
+        menuPublic.setText("Public");
+
+        itemShare.setText("Share");
+        itemShare.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                itemShareActionPerformed(evt);
+            }
+        });
+        menuPublic.add(itemShare);
+
+        itemStore.setText("Store");
+        itemStore.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                itemStoreActionPerformed(evt);
+            }
+        });
+        menuPublic.add(itemStore);
+
+        jMenuBar1.add(menuPublic);
+
         setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -454,6 +480,23 @@ public class MainGUI extends javax.swing.JFrame implements Closeable {
         //pack();
         //repaint();
     }//GEN-LAST:event_menuPerformanceCheckActionPerformed
+
+    private void itemShareActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemShareActionPerformed
+        // TODO add your handling code here:
+        new ShareFrame(w).setVisible(true);
+    }//GEN-LAST:event_itemShareActionPerformed
+
+    private void itemStoreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemStoreActionPerformed
+        // TODO add your handling code here:
+        try{
+            String URL = "http://doc.gold.ac.uk/~psilv001/wekinator/wekistore.php";
+            Desktop.getDesktop().browse(create(URL));
+        }catch(IOException e){
+            JOptionPane.showMessageDialog(null, e.getMessage());
+        }
+        
+        
+    }//GEN-LAST:event_itemStoreActionPerformed
 
     public void showOutputTable() {
         if (outputTableWindow == null) {
@@ -576,6 +619,8 @@ public class MainGUI extends javax.swing.JFrame implements Closeable {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JMenuItem itemShare;
+    private javax.swing.JMenuItem itemStore;
     private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
@@ -590,6 +635,7 @@ public class MainGUI extends javax.swing.JFrame implements Closeable {
     private javax.swing.JMenuItem menuItemSave;
     private javax.swing.JMenuItem menuItemSaveAs;
     private javax.swing.JCheckBoxMenuItem menuPerformanceCheck;
+    private javax.swing.JMenu menuPublic;
     // End of variables declaration//GEN-END:variables
 
     void displayEditOutput(String name) {
