@@ -8,6 +8,8 @@ package wekimini.gui;
 import java.io.UnsupportedEncodingException;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import javax.swing.JOptionPane;
 import wekimini.MySQLConnect;
 import wekimini.SHA1Converter;
@@ -43,6 +45,8 @@ public class SignUp extends javax.swing.JFrame {
         jPasswordField1 = new javax.swing.JPasswordField();
         jLabel3 = new javax.swing.JLabel();
         jPasswordField2 = new javax.swing.JPasswordField();
+        jLabel4 = new javax.swing.JLabel();
+        jTextField2 = new javax.swing.JTextField();
         jButton1 = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
@@ -58,28 +62,32 @@ public class SignUp extends javax.swing.JFrame {
 
         jLabel3.setText("Confirm password");
 
+        jLabel4.setText("Email");
+
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
         jPanel2Layout.setHorizontalGroup(
             jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(jPanel2Layout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addGap(65, 65, 65)
+                        .addComponent(jPasswordField2))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jLabel3)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(jPanel2Layout.createSequentialGroup()
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
-                            .addComponent(jLabel2))
+                            .addComponent(jLabel4))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jTextField1))
-                            .addGroup(jPanel2Layout.createSequentialGroup()
-                                .addGap(65, 65, 65)
-                                .addComponent(jPasswordField2))))
-                    .addGroup(jPanel2Layout.createSequentialGroup()
-                        .addComponent(jLabel3)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, 237, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jTextField2)
+                            .addComponent(jTextField1))))
                 .addContainerGap())
         );
         jPanel2Layout.setVerticalGroup(
@@ -91,13 +99,17 @@ public class SignUp extends javax.swing.JFrame {
                     .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, Short.MAX_VALUE)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
                     .addComponent(jPasswordField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel3)
                     .addComponent(jPasswordField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(22, Short.MAX_VALUE))
+                .addGap(16, 16, 16))
         );
 
         jButton1.setText("Sign Up");
@@ -149,25 +161,19 @@ public class SignUp extends javax.swing.JFrame {
         boolean end = false;
         if(checkFields()){
             String name = jTextField1.getText();
+            String email = jTextField2.getText();
             String pass = new String(jPasswordField1.getPassword());
             try{
                 String hashpass = SHA1Converter.SHA1(pass);
-                msc.signup(name, hashpass);
+                msc.signup(name, email, hashpass);
                 end = true;
-            }catch(UnsupportedEncodingException e){
+            }catch(UnsupportedEncodingException | NoSuchAlgorithmException | ClassNotFoundException | SQLException e){
                 JOptionPane.showMessageDialog(SignUp.this, "An error occurred!");
             
-            }catch(NoSuchAlgorithmException e){
-                JOptionPane.showMessageDialog(SignUp.this, "An error occurred!");
-            
-            }catch(ClassNotFoundException e){
-                JOptionPane.showMessageDialog(SignUp.this, "An error occurred!");
-            
-            }catch(SQLException e){
-                JOptionPane.showMessageDialog(SignUp.this, "An error occurred!");
-
             }catch(NullPointerException e){
                 JOptionPane.showMessageDialog(SignUp.this, "This username is already in use, please try another one!");
+            }catch(IndexOutOfBoundsException e){
+                JOptionPane.showMessageDialog(SignUp.this, "This email is already in use, please try another one!");
             }
             if(end){
                 JOptionPane.showMessageDialog(SignUp.this, "Success!");
@@ -178,11 +184,21 @@ public class SignUp extends javax.swing.JFrame {
 
     
     private boolean checkFields(){
+        String email = jTextField2.getText();
+        String regex = "^(.+)@(.+)$";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(email);
         boolean ok = true;
         String pass = new String(jPasswordField1.getPassword());
         String conf = new String(jPasswordField2.getPassword());
         if(jTextField1.getText().equals("")){
             JOptionPane.showMessageDialog(SignUp.this, "You must choose an username.");
+            ok = false;
+        }else if(email.equals("")){
+            JOptionPane.showMessageDialog(SignUp.this, "You must enter your email.");
+            ok = false;
+        }else if(!matcher.matches()){
+            JOptionPane.showMessageDialog(SignUp.this, "You must enter a valid email.");
             ok = false;
         }else if (pass.length() < 6){
             JOptionPane.showMessageDialog(SignUp.this, "Your password must have at least 6 characters.");
@@ -238,10 +254,12 @@ public class SignUp extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPasswordField jPasswordField1;
     private javax.swing.JPasswordField jPasswordField2;
     private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField jTextField2;
     // End of variables declaration//GEN-END:variables
 }

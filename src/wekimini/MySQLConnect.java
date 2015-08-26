@@ -52,7 +52,7 @@ public class MySQLConnect {
         }
     }
     
-    public void signup (String name, String pass) throws ClassNotFoundException, SQLException{
+    public void signup (String name, String email, String pass) throws ClassNotFoundException, SQLException{
         try{
             Class.forName("com.mysql.jdbc.Driver");
             connect = DriverManager
@@ -64,22 +64,25 @@ public class MySQLConnect {
             resultSet = preparedStatement.executeQuery();
             
             if (!resultSet.next() ) {
-                preparedStatement = connect
-                .prepareStatement("insert into users values (default, ?, ?)");
+                preparedStatement = connect.prepareStatement("select email from users where email = ?");
+                preparedStatement.setString(1, email);
+                resultSet = preparedStatement.executeQuery();
+                if(!resultSet.next()){
+                    preparedStatement = connect
+                .prepareStatement("insert into users values (default, ?, ?, ?)");
                   preparedStatement.setString(1, name);
-                  preparedStatement.setString(2, pass);
+                  preparedStatement.setString(2, email);
+                  preparedStatement.setString(3, pass);
                   preparedStatement.executeUpdate();
+                }else{
+                    throw new IndexOutOfBoundsException();
+                }
+                
             }else{
                  throw new NullPointerException();
             }
        
-        }catch(ClassNotFoundException e){
-            e.printStackTrace();
-            throw e;
-        }catch(SQLException e){
-            e.printStackTrace();
-            throw e;
-        }catch(NullPointerException e){
+        }catch(ClassNotFoundException | SQLException | NullPointerException | IndexOutOfBoundsException e ){
             throw e;
         }finally{
             close();

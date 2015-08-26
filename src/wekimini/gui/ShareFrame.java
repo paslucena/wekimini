@@ -11,21 +11,19 @@ import com.jcraft.jsch.JSch;
 import com.jcraft.jsch.Session;
 import com.jcraft.jsch.SftpException;
 import java.awt.Component;
+import java.awt.Desktop;
 import java.awt.Dimension;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import static java.net.URI.create;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
-import java.util.logging.Level;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 import javax.swing.DefaultComboBoxModel;
@@ -60,7 +58,7 @@ public class ShareFrame extends javax.swing.JFrame {
     private Wekinator w;
     private final JFileChooser fc = new JFileChooser();
     private final MySQLConnect msc = new MySQLConnect();
-    
+    private static volatile int status = 0;
     //File file;
     String path;
 
@@ -88,10 +86,10 @@ public class ShareFrame extends javax.swing.JFrame {
         jTextField5.setVisible(false);
         jLabel12.setVisible(false);
         jTextField7.setVisible(false);
-        statusLabel1.setVisible(false);
-        statusLabel2.setVisible(false);
-        statusLabel3.setVisible(false);
-        statusLabel4.setVisible(false);
+        statusLabel1.setVisible(true);
+        //statusLabel2.setVisible(false);
+        //statusLabel3.setVisible(false);
+        //statusLabel4.setVisible(false);
         this.pack();
         
         
@@ -156,11 +154,9 @@ public class ShareFrame extends javax.swing.JFrame {
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         jButton2 = new javax.swing.JButton();
+        jButton3 = new javax.swing.JButton();
         statusPanel = new javax.swing.JPanel();
         statusLabel1 = new javax.swing.JLabel();
-        statusLabel2 = new javax.swing.JLabel();
-        statusLabel3 = new javax.swing.JLabel();
-        statusLabel4 = new javax.swing.JLabel();
 
         jComboBox2.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
 
@@ -378,8 +374,8 @@ public class ShareFrame extends javax.swing.JFrame {
             .addGroup(inputPanelLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel13)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(fieldInputOSCMessage, javax.swing.GroupLayout.PREFERRED_SIZE, 313, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(fieldInputOSCMessage)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(jLabel14)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -564,6 +560,13 @@ public class ShareFrame extends javax.swing.JFrame {
             }
         });
 
+        jButton3.setText("Forgot your username/password?");
+        jButton3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton3ActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout sharePanelLayout = new javax.swing.GroupLayout(sharePanel);
         sharePanel.setLayout(sharePanelLayout);
         sharePanelLayout.setHorizontalGroup(
@@ -587,7 +590,8 @@ public class ShareFrame extends javax.swing.JFrame {
                         .addComponent(jLabel9)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jButton2)
-                        .addGap(0, 0, Short.MAX_VALUE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jButton3, javax.swing.GroupLayout.DEFAULT_SIZE, 332, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         sharePanelLayout.setVerticalGroup(
@@ -608,19 +612,14 @@ public class ShareFrame extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(sharePanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel9)
-                    .addComponent(jButton2))
+                    .addComponent(jButton2)
+                    .addComponent(jButton3))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
         statusPanel.setBackground(new java.awt.Color(255, 255, 255));
 
-        statusLabel1.setText("Extracting information...");
-
-        statusLabel2.setText("Zipping files together...");
-
-        statusLabel3.setText("Sharing files...");
-
-        statusLabel4.setText("Complete!");
+        statusLabel1.setText("                                              ");
 
         javax.swing.GroupLayout statusPanelLayout = new javax.swing.GroupLayout(statusPanel);
         statusPanel.setLayout(statusPanelLayout);
@@ -628,25 +627,15 @@ public class ShareFrame extends javax.swing.JFrame {
             statusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(statusPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(statusLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(statusLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(statusLabel3)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(statusLabel4)
+                .addComponent(statusLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         statusPanelLayout.setVerticalGroup(
             statusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(statusPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(statusPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(statusLabel1)
-                    .addComponent(statusLabel2)
-                    .addComponent(statusLabel3)
-                    .addComponent(statusLabel4))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(statusLabel1)
+                .addContainerGap(12, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
@@ -867,11 +856,36 @@ public class ShareFrame extends javax.swing.JFrame {
     private void shareButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_shareButtonActionPerformed
         // TODO add your handling code here:
         boolean end = false;
+        
+        
+        Thread t = new Thread() {   // Create an instance of an anonymous inner class that extends Thread
+            @Override
+            public void run() {      // Override run() to specify the running behaviors
+                while(status < 5){
+                if(status == 1){
+                    statusLabel1.setText("Extracting information...");
+                }else if(status == 2){
+                    statusLabel1.setText("Zipping files together...");
+                }else if(status == 3){
+                    statusLabel1.setText("Sharing files...");              
+                }else if(status == 4){
+                    statusLabel1.setText("Complete!");
+                }
+                }
+                // Suspend itself and yield control to other threads for the specified milliseconds
+                // Also provide the necessary delay
+                try {
+                   sleep(100); // milliseconds
+                } catch (InterruptedException ex) {}
+            }     
+         };
+         t.start(); 
       
         int index = typeComboBox.getSelectedIndex();
         int id = login();
         if(checkFields() && id != 0){
-            statusLabel1.setVisible(true);
+            //statusLabel1.setVisible(true);
+            status = 1; 
             System.out.println("Extracting information...");
                 try{
                 File i = null;
@@ -934,8 +948,9 @@ public class ShareFrame extends javax.swing.JFrame {
                     files[1] = i;
                     files[2] = o;
                 }
-                statusLabel1.setVisible(false);
-                statusLabel2.setVisible(true);
+                //statusLabel1.setVisible(false);
+                //statusLabel2.setVisible(true);
+                status = 2;
                 System.out.println("Zipping files together...");
                 File zipped = new File(homeDir + File.separator + "Share/" + filename + ".zip");
                 zipFiles(zipped, files);
@@ -947,29 +962,32 @@ public class ShareFrame extends javax.swing.JFrame {
                 //main zip file with everything
                 
                 msc.insert(name, desc, id, type, category, environment);
-                statusLabel2.setVisible(false);
-                statusLabel3.setVisible(true);
+                //statusLabel2.setVisible(false);
+                //statusLabel3.setVisible(true);
+                status = 3;
                 System.out.println("Sharing files...");
                 sendFileSFTP(filename + File.separator, zipped);
                 
                 
-                statusLabel3.setVisible(false);
-                statusLabel4.setVisible(true);
+                //statusLabel3.setVisible(false);
+                //statusLabel4.setVisible(true);
+                status = 4;
                 System.out.println("Complete!");
                 end = true;
                 
                 }catch (Exception e){
-                    statusLabel1.setVisible(false);
-                    statusLabel2.setVisible(false);
-                    statusLabel3.setVisible(false);
-                    statusLabel4.setVisible(false);
+                    //statusLabel1.setVisible(false);
+                    //statusLabel2.setVisible(false);
+                    //statusLabel3.setVisible(false);
+                    //statusLabel4.setVisible(false);
                     JOptionPane.showMessageDialog(ShareFrame.this, "An error occurred!");
                 }
         
         }
         
         if(end){
-            statusLabel4.setVisible(false);
+            status = 5;
+            //statusLabel4.setVisible(false);
             JOptionPane.showMessageDialog(ShareFrame.this, "Success!");
             this.dispose();
         }
@@ -1027,6 +1045,16 @@ public class ShareFrame extends javax.swing.JFrame {
         }
         packExpand();
     }//GEN-LAST:event_envComboBoxActionPerformed
+
+    private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
+        // TODO add your handling code here:
+        try{
+            String URL = "http://doc.gold.ac.uk/~psilv001/wekinator/recover.php";
+            Desktop.getDesktop().browse(create(URL));
+        }catch(IOException e){
+            JOptionPane.showMessageDialog(null, e.getMessage());
+        }
+    }//GEN-LAST:event_jButton3ActionPerformed
     void packExpand()
     {
         Dimension oldDim = this.getSize();
@@ -1377,6 +1405,7 @@ public class ShareFrame extends javax.swing.JFrame {
     private javax.swing.JPanel inputPanel;
     private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JComboBox jComboBox2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
@@ -1412,9 +1441,6 @@ public class ShareFrame extends javax.swing.JFrame {
     private javax.swing.JButton shareButton;
     private javax.swing.JPanel sharePanel;
     private javax.swing.JLabel statusLabel1;
-    private javax.swing.JLabel statusLabel2;
-    private javax.swing.JLabel statusLabel3;
-    private javax.swing.JLabel statusLabel4;
     private javax.swing.JPanel statusPanel;
     private javax.swing.JComboBox typeComboBox;
     private javax.swing.JLabel withLabel;

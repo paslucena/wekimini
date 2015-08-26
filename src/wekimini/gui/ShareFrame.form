@@ -377,8 +377,8 @@
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="jLabel13" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="32767" attributes="0"/>
-                      <Component id="fieldInputOSCMessage" min="-2" pref="313" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="fieldInputOSCMessage" max="32767" attributes="0"/>
                       <EmptySpace type="unrelated" max="-2" attributes="0"/>
                       <Component id="jLabel14" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
@@ -665,7 +665,8 @@
                               <Component id="jLabel9" min="-2" max="-2" attributes="0"/>
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="jButton2" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Component id="jButton3" pref="332" max="32767" attributes="0"/>
                           </Group>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
@@ -694,6 +695,7 @@
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="jLabel9" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="jButton2" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="jButton3" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                       <EmptySpace max="32767" attributes="0"/>
                   </Group>
@@ -750,6 +752,14 @@
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton2ActionPerformed"/>
               </Events>
             </Component>
+            <Component class="javax.swing.JButton" name="jButton3">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Forgot your username/password?"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jButton3ActionPerformed"/>
+              </Events>
+            </Component>
           </SubComponents>
         </Container>
         <Container class="javax.swing.JPanel" name="statusPanel">
@@ -764,13 +774,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="statusLabel1" min="-2" pref="154" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="statusLabel2" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="statusLabel3" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="statusLabel4" min="-2" max="-2" attributes="0"/>
+                      <Component id="statusLabel1" min="-2" pref="219" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
                   </Group>
               </Group>
@@ -779,13 +783,8 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="statusLabel1" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="statusLabel2" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="statusLabel3" alignment="3" min="-2" max="-2" attributes="0"/>
-                          <Component id="statusLabel4" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="32767" attributes="0"/>
+                      <Component id="statusLabel1" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace pref="12" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -793,22 +792,7 @@
           <SubComponents>
             <Component class="javax.swing.JLabel" name="statusLabel1">
               <Properties>
-                <Property name="text" type="java.lang.String" value="Extracting information..."/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JLabel" name="statusLabel2">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Zipping files together..."/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JLabel" name="statusLabel3">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Sharing files..."/>
-              </Properties>
-            </Component>
-            <Component class="javax.swing.JLabel" name="statusLabel4">
-              <Properties>
-                <Property name="text" type="java.lang.String" value="Complete!"/>
+                <Property name="text" type="java.lang.String" value="                                              "/>
               </Properties>
             </Component>
           </SubComponents>
